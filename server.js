@@ -1,21 +1,17 @@
 const express = require('express');
 const path = require('path');
-
 const app = express();
-
-dotenv.config();
 
 const questionsData = require('./questions.js');
 
-// serve frontend from public folder
 app.use(express.static(path.join(__dirname, 'public')));
 
-// get all questions
+// Get all questions
 app.get('/api/questions', (req, res) => {
   res.json(questionsData);
 });
 
-// get a specific question by index
+// Get question by ID
 app.get('/api/questions/:id', (req, res) => {
   const id = parseInt(req.params.id);
   const flat = questionsData.parts.flat();
@@ -26,12 +22,12 @@ app.get('/api/questions/:id', (req, res) => {
   }
 });
 
-// fallback for React/SPA routing
+// Fallback route
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// port from .env or default
+// Use PORT provided by Render or fallback to 3000
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
